@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="cadApp" lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <title>Kugel</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+<body onload="onload()">
+  <h1>Kugel</h1>
+<button ng-click="count = count + 1">Lade in Octoprint</button>
+<input type="button" value="Update" onclick="uploadController(); return false;">
+<div id="viewer"></div>
+<textarea id="code">
+
+// Main entry point; here we construct our solid: 
+function main(params)
+{
+  var object = CSG.sphere({ radius: params.radius });
+  return object;
+}
+</textarea><br>
+<input type="submit" value="Update" onclick="updateSolid(); return false;">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/lightgl.js"></script>
+    <script src="js/csg.js"></script>
+    <script src="js/openjscad.js"></script>
+    <script src="js/kugel.js"></script>
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+
+	<script>
+	var app = angular.module("cadApp", []);
+
+	app.controller('uploadController', function ($scope,$http) {
+		var fdata = new FormData();
+		fdata.append('file', gProcessor.currentObjectToBlob(), "tesst.stl");
+		fdata.append('select', 'false');
+		fdata.append('print', 'false');
+		$http({
+			url: 'http://192.168.178.28:5000/api/files/local',
+			method: "POST",
+			data: fdata,
+			transformRequest: angular.identity,
+			headers: {
+				'Content-Type': undefined,
+				'X-Api-Key': '831FD20458084F5EAE4FC88804BBCF03'
+			}
+		}).then(function (response) {
+		// The then function here is an opportunity to modify the response
+		console.log(response);
+		// The return value gets picked up by the then in the controller.
+		return response.data;
+	      });
+	})
+	</script>
+  </body>
+</html>

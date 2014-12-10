@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html><head>
+  <script src="js/lightgl.js"></script>
+  <script src="js/csg.js"></script>
+  <script src="js/openjscad.js"></script>
+
+<script>
+var gProcessor=null;
+
+// Show all exceptions to the user:
+OpenJsCad.AlertUserOfUncaughtExceptions();
+
+function onload()
+{
+  gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
+  updateSolid();
+}
+
+function updateSolid()
+{
+  gProcessor.setJsCad(document.getElementById('code').value);
+}
+
+function getParameterDefinitions() {
+  return [
+    { name: 'radius', caption: 'Radius der Kugel:', type: 'float', default: 10 },
+  ];
+}
+</script>
+<title>Kugel</title>  
+</head>
+<body onload="onload()">
+  <h1>Kugel</h1>
+<div id="viewer"></div>
+<textarea id="code">
+
+// Main entry point; here we construct our solid: 
+function main(params)
+{
+  var object = CSG.sphere({ radius: params.radius });
+  return object;
+}
+</textarea><br>
+<input type="submit" value="Update" onclick="updateSolid(); return false;">
+<br><br>
+</body>
+</html>
